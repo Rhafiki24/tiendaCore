@@ -1,0 +1,76 @@
+{% extends 'tiendaApp/base.html' %}
+{% load static %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+<!-- productos -->
+<div class="container mt-5">
+  <div class="mb-5">
+    <h1>Productos Disponibles</h1>
+  </div> 
+  <div class="row">
+    {% for producto in productos %}
+      <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+        <div class="card h-100">
+          <a href="{{ producto.imagen.url }}" data-lightbox="{{ producto.nombre }}" data-title="{{ producto.descripcion }}">
+            {% if producto.imagen %}
+              <img src="{{ producto.imagen.url }}" class="card-img-top img-fluid" alt="{{ producto.nombre }}">
+            {% else %}
+              <img src="{% static 'images/no_disponible.png' %}" class="card-img-top" alt="Imagen no disponible">
+            {% endif %}
+          </a>
+          <div class="card-body d-flex flex-column" style="text-align: justify;">
+            <h5 class="card-title">{{ producto.nombre|truncatewords:4 }}</h5>
+              <p class="card-text">{{ producto.descripcion|truncatewords:15 }}</p>
+            <div class="mt-auto">
+              <h6 class="card-text">{{ producto.categoria}}</h6>
+              <h4 class="card-text">Precio: ${{ producto.precio }}</h4>
+            </div>
+          </div>
+          <div class="card-footer">
+              <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal{{ producto.id }}">Ver más</button>
+              <button class="btn btn-dark" onclick="window.location.href='{% url 'agregar_al_carrito' producto.id %}'">Comprar</button>
+          </div>
+        </div>
+      </div>
+          
+      <!-- Modal -->
+      <div class="modal fade " id="modal{{ producto.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-2">{{ producto.nombre }}</h1>
+            </div>
+            <div class="modal-body ">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-md-6">
+                    <img src="{{ producto.imagen.url }}" class="img-fluid w-100" alt="{{ producto.nombre }}">
+                  </div>
+                  <div class="col-md-6  ms-auto d-flex flex-column">
+                    <div>
+                      <h3>Descripción:</h3>
+                      <p class="fs-4" style="text-align: justify;">{{ producto.descripcion }}</p>
+                      <h3>Plataforma:</h3>
+                      <p class="fs-4">{{ producto.categoria }}</p>
+                      <h3>Stock:</h3>
+                      <p class="fs-4">{{ producto.cantidad_disponible }}</p>
+                    </div>
+                    <div class="mt-auto mb-5">
+                      <h1 style="color: dodgerblue;">PRECIO: $ {{ producto.precio }}</h1>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'tiendaApp/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+    <div class="mb-5">
+      <h1>Resultados de búsqueda</h1>
+    </div>
+    <div>
+        <p class="fs-5">Mostrando resultados para: {{ busqueda }}</p>
+    </div>
+    <div class="row">
+        {% for producto in productos %}
+        <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+            <div class="card">
+                <a href="{{ producto.imagen.url }}" data-lightbox="{{ producto.nombre }}" data-title="{{ producto.descripcion }}">
+                    {% if producto.imagen %}
+                    <img src="{{ producto.imagen.url }}" class="card-img-top img-fluid" alt="{{ producto.nombre }}">
+                    {% else %}
+                    <img src="{% static 'images/no_disponible.png' %}" class="card-img-top" alt="Imagen no disponible">
+                    {% endif %}
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title">{{ producto.nombre|truncatewords:4 }}</h5>
+                    <p class="card-text">{{ producto.descripcion|truncatewords:9 }}</p>
+                    <h6 class="card-text">{{ producto.categoria}}</h6>
+                    <h4 class="card-text">Precio: ${{ producto.precio }}</h4>
+                </div>
+                <div class="card-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal{{ producto.id }}">Ver más</button>
+                    <button class="btn btn-dark">Comprar</button>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+</div>
+{% endblock %}

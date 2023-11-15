@@ -1,0 +1,43 @@
+{% extends 'tiendaApp/base.html' %}
+{% block title %}Carrito de Compras{% endblock %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Carrito de Compras</h1>
+
+    <table class="table">
+      <thead>
+        <tr class="table-dark">
+          <th scope="col">Producto</th>
+          <th scope="col">Stock</th>
+          <th scope="col">Cantidad</th>
+          <th scope="col">Precio Unitario</th>
+          <th scope="col">Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in carrito %}
+          <tr>
+            <td>{{ item.producto.nombre }}</td>
+            <td>{{ item.producto.cantidad_disponible }}</td>
+            <td>{{ item.cantidad }}</td>
+            <td>${{ item.producto.precio }}</td>
+            <td>${{ item.subtotal }}</td>
+          </tr>
+        {% endfor %}
+        <tr class="table-secondary">
+          <td colspan="4"><strong>Total</strong></td>
+          <td>${{ total }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    {% if carrito %}
+      <div class="text-center">
+        <a href="#" class="btn btn-dark">Realizar Compra</a>
+      </div>
+    {% else %}
+      <p class="text-center">Tu carrito está vacío.</p>
+    {% endif %}
+  </div>
+{% endblock %}

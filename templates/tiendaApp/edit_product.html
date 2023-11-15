@@ -1,0 +1,43 @@
+{% extends 'tiendaApp/base.html' %}
+{% load static %}
+{% block title %}Editar Producto{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="mb-5">    
+        <h1>Editar Producto</h1>
+    </div>
+    <table class="table" style="text-align: justify;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Categoría</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+                <tr>
+                    <td>{{ producto.id }}</td>
+                    <td>{{ producto.nombre }}</td>
+                    <td>{{ producto.descripcion }}</td>
+                    <td>{{ producto.precio }}</td>
+                    <td>{{ producto.categoria }}</td>
+                    <td>
+                        <div class="d-flex">                            
+                            <a href="{% url 'editar_producto' producto.id %}" class="btn btn-primary me-2">Editar</a>
+                            <form action="{% url 'eliminar_producto' producto.id %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
