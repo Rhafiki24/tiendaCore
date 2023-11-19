@@ -13,6 +13,7 @@
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>Descripción</th>
+                <th>Stock</th>
                 <th>Precio</th>
                 <th>Categoría</th>
                 <th>Acciones</th>
@@ -21,11 +22,12 @@
         <tbody>
             {% for producto in productos %}
                 <tr>
-                    <td>{{ producto.id }}</td>
-                    <td>{{ producto.nombre }}</td>
-                    <td>{{ producto.descripcion }}</td>
-                    <td>{{ producto.precio }}</td>
-                    <td>{{ producto.categoria }}</td>
+                    <td >{{ producto.id }}</td>
+                    <td class="col-3">{{ producto.nombre }}</td>
+                    <td >{{ producto.descripcion }}</td>
+                    <td class="col-1">{{ producto.cantidad_disponible }}</td>
+                    <td class="col-1">{{ producto.precio }}</td>
+                    <td class="col-1">{{ producto.categoria }}</td>
                     <td>
                         <div class="d-flex">                            
                             <a href="{% url 'editar_producto' producto.id %}" class="btn btn-primary me-2">Editar</a>

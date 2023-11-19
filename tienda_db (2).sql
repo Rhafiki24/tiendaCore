@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-11-2023 a las 00:18:24
+-- Tiempo de generación: 20-11-2023 a las 00:54:40
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -97,7 +97,11 @@ INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALU
 (33, 'Can add carrito', 9, 'add_carrito'),
 (34, 'Can change carrito', 9, 'change_carrito'),
 (35, 'Can delete carrito', 9, 'delete_carrito'),
-(36, 'Can view carrito', 9, 'view_carrito');
+(36, 'Can view carrito', 9, 'view_carrito'),
+(37, 'Can add compra', 10, 'add_compra'),
+(38, 'Can change compra', 10, 'change_compra'),
+(39, 'Can delete compra', 10, 'delete_compra'),
+(40, 'Can view compra', 10, 'view_compra');
 
 -- --------------------------------------------------------
 
@@ -124,7 +128,7 @@ CREATE TABLE `auth_user` (
 --
 
 INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES
-(1, 'pbkdf2_sha256$600000$eLb0mHU8gQ1u9dz2hcmTl0$ffB4Q0u8mCHHWsH2dNpSyJiybCxhXI1W7ovDqU+KuzQ=', '2023-11-15 22:20:09.215188', 1, 'chenriquezf', '', '', 'admin@admin.cl', 1, 1, '2023-11-15 03:03:26.444823'),
+(1, 'pbkdf2_sha256$600000$eLb0mHU8gQ1u9dz2hcmTl0$ffB4Q0u8mCHHWsH2dNpSyJiybCxhXI1W7ovDqU+KuzQ=', '2023-11-19 22:18:16.019671', 1, 'chenriquezf', '', '', 'admin@admin.cl', 1, 1, '2023-11-15 03:03:26.444823'),
 (2, 'pbkdf2_sha256$600000$CWIG5h5CyxF0XkRn3kT7Nd$jv00rS9zNxXP34u93FGQIT0P0B72IvHoinpxbvmVjJw=', '2023-11-15 21:07:40.071072', 1, 'xbarrerap', '', '', 'admin@admin.cl', 1, 1, '2023-11-15 03:11:24.837541'),
 (3, 'pbkdf2_sha256$600000$CfywlhBWJJCPkjCr9kYe0N$lexEExjoxNtmm1U3zMR0SKF/i3m/VcAmCVUsQ3TwQM8=', '2023-11-15 03:18:51.495579', 1, 'gscolario', '', '', 'admin@admin.cl', 1, 1, '2023-11-15 03:12:13.736566');
 
@@ -194,6 +198,7 @@ INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 (6, 'sessions', 'session'),
 (9, 'tiendaApp', 'carrito'),
 (8, 'tiendaApp', 'carritoitem'),
+(10, 'tiendaApp', 'compra'),
 (7, 'tiendaApp', 'producto');
 
 -- --------------------------------------------------------
@@ -239,7 +244,8 @@ INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 (23, 'tiendaApp', '0005_carritoitem', '2023-11-15 04:30:14.921399'),
 (24, 'tiendaApp', '0006_delete_carritoitem', '2023-11-15 04:37:30.263352'),
 (25, 'tiendaApp', '0007_producto_cantidad_disponible', '2023-11-15 18:46:19.563973'),
-(26, 'tiendaApp', '0008_carrito', '2023-11-15 19:25:23.609661');
+(26, 'tiendaApp', '0008_carrito', '2023-11-15 19:25:23.609661'),
+(27, 'tiendaApp', '0009_compra', '2023-11-19 22:11:47.328015');
 
 -- --------------------------------------------------------
 
@@ -258,7 +264,9 @@ CREATE TABLE `django_session` (
 --
 
 INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALUES
+('3x6mo1gblbezzkmu42zef121cr2urv81', '.eJztzN1qwyAUB_BXEa9FjDHR7nK73hPUIkfPSZOuVagGxsbefQ10sD3Devv_-H3yAGubw1rpGhbkT7zj4ncWIb1R3go8QT4WmUpu1yXKbSLvbZWvBen8fN_-AWao8-29wwnGKWGXOucm1e96G41L46AVoSWL1pjeKFCoNcbBUdKm0zZhxHFwfdzQC9UKR6o3br_3PIRTLfkn9VwwJZgeBPP8BXJbEJBBaiuclw9AYPS-tFLhQrmR3Oaee34Q7EE9qP9CHfjXN5LlS8A:1r4rRd:_ULTUBKz-OfJp5wD_9W6Dhji47Sj0dB5hskylvGw4fs', '2023-12-03 23:43:17.121691'),
 ('fcbwdh8m4iww5tqno0oe47xs6li1q3hb', '.eJxVjMsOwiAQRf-FtSG8oS7d-w2EmQGpGkhKuzL-uzbpQrf3nHNfLKZtrXEbeYkzsTOT7PS7QcJHbjuge2q3zrG3dZmB7wo_6ODXTvl5Ody_g5pG_dYTleQKkkQZQhF60h5MQGeVyOSzJ2-MNiIJUorAhozKSOWRgJwNGtj7A-7DOAI:1r3OEz:JrIdI5aj0nm72HzHtsn3w5CmDVs2BXr_nYYAsj8KsLg', '2023-11-29 22:20:09.222700'),
+('iqatqf2syn9pxj6ss2gf3122f62rva93', '.eJxVjMtuwyAQRX8FsbYQxtiQLtt1vyBEaGDGMXmAFLBUJeq_N5ZSqd3ec-55cA9rW_xa6eYT8jfe8-7vFiCeKW8AT5CPRcSS2y0FsSniRav4LEiX95f7L7BAXZ7vHc4wzRH72Fs7y2E3mKBtnEYlCQ0ZNFoPWoJEpTCMlqLSvTIRA06jHcIWvVKtcKT6zO33jnt_qiX_ro53THZMjR1z_ANySwjIILYVLukOCIy-UisVrpQbiU133PHDgX__AOGdVa0:1r4rRm:Zqmjk5TuYZx3op-yh76YOLPaJBok7eoVnDOetr6qLZI', '2023-12-03 23:43:26.326872'),
 ('tl4mk87owupb5s4ud3mlsm34ew8mswsa', '.eJxVjMsOwiAQRf-FtSG8oS7d-w2EmQGpGkhKuzL-uzbpQrf3nHNfLKZtrXEbeYkzsTOT7PS7QcJHbjuge2q3zrG3dZmB7wo_6ODXTvl5Ody_g5pG_dYTleQKkkQZQhF60h5MQGeVyOSzJ2-MNiIJUorAhozKSOWRgJwNGtj7A-7DOAI:1r37op:e4VKy8qJBYs204QNQ-vJjdgu4dmUeH_oSeCq170cjX0', '2023-11-29 04:48:03.008984');
 
 -- --------------------------------------------------------
@@ -274,16 +282,31 @@ CREATE TABLE `tiendaapp_carrito` (
   `usuario_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Volcado de datos para la tabla `tiendaapp_carrito`
+-- Estructura de tabla para la tabla `tiendaapp_compra`
 --
 
-INSERT INTO `tiendaapp_carrito` (`id`, `cantidad`, `producto_id`, `usuario_id`) VALUES
-(8, 4, 6, 1),
-(9, 1, 7, 1),
-(10, 3, 8, 1),
-(11, 1, 6, 2),
-(12, 1, 8, 2);
+CREATE TABLE `tiendaapp_compra` (
+  `id` bigint(20) NOT NULL,
+  `total` int(11) NOT NULL,
+  `fecha` datetime(6) NOT NULL,
+  `usuario_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tiendaapp_compra`
+--
+
+INSERT INTO `tiendaapp_compra` (`id`, `total`, `fecha`, `usuario_id`) VALUES
+(1, 39960, '2023-11-19 22:12:46.621098', 1),
+(2, 17990, '2023-11-19 22:13:27.510853', 1),
+(3, 17990, '2023-11-19 22:35:52.363017', 1),
+(4, 29990, '2023-11-19 22:36:14.012004', 1),
+(5, 95870, '2023-11-19 23:44:46.765037', 1),
+(6, 29990, '2023-11-19 23:47:05.649686', 1),
+(7, 29900, '2023-11-19 23:53:30.902021', 1);
 
 -- --------------------------------------------------------
 
@@ -400,6 +423,13 @@ ALTER TABLE `tiendaapp_carrito`
   ADD KEY `tiendaApp_carrito_usuario_id_d64901ce_fk_auth_user_id` (`usuario_id`);
 
 --
+-- Indices de la tabla `tiendaapp_compra`
+--
+ALTER TABLE `tiendaapp_compra`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `tiendaApp_compra_usuario_id_46f1807a_fk_auth_user_id` (`usuario_id`);
+
+--
 -- Indices de la tabla `tiendaapp_producto`
 --
 ALTER TABLE `tiendaapp_producto`
@@ -425,7 +455,7 @@ ALTER TABLE `auth_group_permissions`
 -- AUTO_INCREMENT de la tabla `auth_permission`
 --
 ALTER TABLE `auth_permission`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT de la tabla `auth_user`
@@ -455,19 +485,25 @@ ALTER TABLE `django_admin_log`
 -- AUTO_INCREMENT de la tabla `django_content_type`
 --
 ALTER TABLE `django_content_type`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `django_migrations`
 --
 ALTER TABLE `django_migrations`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT de la tabla `tiendaapp_carrito`
 --
 ALTER TABLE `tiendaapp_carrito`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+
+--
+-- AUTO_INCREMENT de la tabla `tiendaapp_compra`
+--
+ALTER TABLE `tiendaapp_compra`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `tiendaapp_producto`
@@ -519,6 +555,12 @@ ALTER TABLE `django_admin_log`
 ALTER TABLE `tiendaapp_carrito`
   ADD CONSTRAINT `tiendaApp_carrito_producto_id_f4f7b059_fk_tiendaApp_producto_id` FOREIGN KEY (`producto_id`) REFERENCES `tiendaapp_producto` (`id`),
   ADD CONSTRAINT `tiendaApp_carrito_usuario_id_d64901ce_fk_auth_user_id` FOREIGN KEY (`usuario_id`) REFERENCES `auth_user` (`id`);
+
+--
+-- Filtros para la tabla `tiendaapp_compra`
+--
+ALTER TABLE `tiendaapp_compra`
+  ADD CONSTRAINT `tiendaApp_compra_usuario_id_46f1807a_fk_auth_user_id` FOREIGN KEY (`usuario_id`) REFERENCES `auth_user` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -26,3 +26,9 @@ class Carrito(models.Model):
 
     def subtotal(self):
         return self.cantidad * self.producto.precio
+    
+class Compra(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    productos = models.ManyToManyField(Producto)
+    total = models.IntegerField()
+    fecha = models.DateTimeField(auto_now_add=True)

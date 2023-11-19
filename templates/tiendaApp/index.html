@@ -29,14 +29,48 @@
             </div>
           </div>
           <div class="card-footer">
-              <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal{{ producto.id }}">Ver más</button>
-              <button class="btn btn-dark" onclick="window.location.href='{% url 'agregar_al_carrito' producto.id %}'">Comprar</button>
+              <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modalInfo{{ producto.id }}">Ver más</button>
+              {% if user.is_authenticated %}
+                <button class="btn btn-dark" onclick="window.location.href='{% url 'agregar_al_carrito' producto.id %}', window.alert('Se ha agregado el producto al carrito')">Comprar</button>
+              {% else %}
+                <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modalLogin{{ producto.id }}">Comprar</button>
+              {% endif %}
           </div>
         </div>
       </div>
-          
-      <!-- Modal -->
-      <div class="modal fade " id="modal{{ producto.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+      <!-- Modal login-->
+      <div class="modal fade " id="modalLogin{{ producto.id }}" tabindex="-1" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-2">Tienda virtual</h1>
+            </div>
+            <div class="modal-body ">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-md-6">
+                    <img src="{% static 'images/compra.jpg' %}" class="img-fluid w-100" alt="Imagen compra">
+                  </div>
+                  <div class="col-md-6  ms-auto d-flex flex-column">
+                    <div>
+                      <h3>Necesitas una cuenta para comprar</h3>
+                      <p class="fs-4" style="text-align: justify;">Por favor, ingresa a tu cuenta para poder efectuar la compra.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <a class="btn btn-dark" href="{% url 'login' %}">Login</a>
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+                
+      <!-- Modal info-->
+      <div class="modal fade " id="modalInfo{{ producto.id }}" tabindex="-1" aria-labelledby="exampleModalLabel">
         <div class="modal-dialog modal-dialog-centered modal-xl">
           <div class="modal-content">
             <div class="modal-header">
@@ -73,4 +107,8 @@
     {% endfor %}
   </div>
 </div>
+
 {% endblock %}
+
+python manage.py migrate tiendaApp <'tiendaApp.0010_compraproducto_alter_compra_productos'>
+

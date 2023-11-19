@@ -1,43 +1,147 @@
 {% extends 'tiendaApp/base.html' %}
 {% block title %}Carrito de Compras{% endblock %}
 {% load static %}
-{% block content %}
-<div class="container mt-4">
-    <h1 class="mb-4">Carrito de Compras</h1>
 
-    <table class="table">
-      <thead>
-        <tr class="table-dark">
-          <th scope="col">Producto</th>
-          <th scope="col">Stock</th>
-          <th scope="col">Cantidad</th>
-          <th scope="col">Precio Unitario</th>
-          <th scope="col">Subtotal</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in carrito %}
-          <tr>
-            <td>{{ item.producto.nombre }}</td>
-            <td>{{ item.producto.cantidad_disponible }}</td>
-            <td>{{ item.cantidad }}</td>
-            <td>${{ item.producto.precio }}</td>
-            <td>${{ item.subtotal }}</td>
-          </tr>
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
         {% endfor %}
-        <tr class="table-secondary">
-          <td colspan="4"><strong>Total</strong></td>
-          <td>${{ total }}</td>
-        </tr>
-      </tbody>
-    </table>
+    </ul>
+{% endif %}
 
-    {% if carrito %}
-      <div class="text-center">
-        <a href="#" class="btn btn-dark">Realizar Compra</a>
-      </div>
-    {% else %}
-      <p class="text-center">Tu carrito está vacío.</p>
-    {% endif %}
-  </div>
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="mb-4">Carrito de Compras</h1>
+        {% if carrito_items %}
+            <ul class="list-group">
+                {% for item in carrito_items %}
+                <li class="list-group-item mb-3 d-flex justify-content-between align-items-center fs-4">
+                    <div class="d-flex">
+                            <button type="button" class="btn btn-link fs-4 " style="color: black" data-bs-toggle="modal" data-bs-target="#modalInfoCarrito{{ item.producto.id }}">
+                                {{ item.producto.nombre }}
+                            </button>
+                            <form method="POST" action="{% url 'actualizar_carrito' %}" class="update-form">
+                                {% csrf_token %}
+                                <input type="hidden" name="producto_id" value="{{ item.producto.id }}">
+                                <input class="fs-5" type="number" name="cantidad" value="{{ item.cantidad }}" min="1" max="{{ item.producto.cantidad_disponible }}" onchange="this.form.submit()">
+                            </form>
+                            <form method="POST" action="{% url 'eliminar_del_carrito' %}" class="ms-1 ">
+                                {% csrf_token %}
+                                <input type="hidden" name="producto_id" value="{{ item.producto.id }}">
+                                <button type="submit" class="btn btn-sm btn-danger" title="Eliminar producto del carrito"><i class="bi bi-trash fs-5"></i></button>
+                            </form>
+                        </div>
+                        <span class="badge bg-dark">$ {{ item.subtotal }}</span>
+                    </li>
+                    {% comment %} Modal info carrito {% endcomment %}
+                    <div class="modal fade " id="modalInfoCarrito{{ item.producto.id }}" tabindex="-1" aria-labelledby="exampleModalLabel">
+                        <div class="modal-dialog modal-dialog-centered modal-xl">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h1 class="modal-title fs-2">{{ item.producto.nombre }}</h1>
+                            </div>
+                            <div class="modal-body ">
+                              <div class="container-fluid">
+                                <div class="row">
+                                  <div class="col-md-6">
+                                    <img src="{{ item.producto.imagen.url }}" class="img-fluid w-100" alt="{{ item.producto.nombre }}">
+                                  </div>
+                                  <div class="col-md-6  ms-auto d-flex flex-column">
+                                    <div>
+                                      <h3>Descripción:</h3>
+                                      <p class="fs-4" style="text-align: justify;">{{ item.producto.descripcion }}</p>
+                                      <h3>Plataforma:</h3>
+                                      <p class="fs-4">{{ item.producto.categoria }}</p>
+                                      <h3>Stock:</h3>
+                                      <p class="fs-4">{{ item.producto.cantidad_disponible }}</p>
+                                    </div>
+                                    <div class="mt-auto mb-5">
+                                      <h1 style="color: dodgerblue;">PRECIO: $ {{ item.producto.precio }}</h1>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                {% endfor %}
+            </ul>
+            <div class="mt-3 row">
+                <div>
+                    <p class="fw-bold fs-2">Total: ${{ total }}</p>
+                </div>
+                <div>
+                    <a href="#" class="btn btn-dark col-2" onclick="confirmarCompra()"><i class="bi bi-cart-check fs-5"></i> Pagar</a>
+                </div>
+            </div>
+        {% else %}
+            <p class="fs-3">El carrito está vacío.</p>
+        {% endif %}
+    </div>
+
+    <!-- Script botón pagar -->
+    <script>
+      function confirmarCompra() {
+        var confirmacion = confirm('Está a punto de realizar una compra. ¿Desea continuar?');
+        
+        if (confirmacion) {
+            var productosCarrito = [ {% for item in carrito_items %}{{ item.producto.id }}, {% endfor %} ];
+            var totalCompra = {{ total }};
+    
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{% url "realizar_compra" %}';
+            form.style.display = 'none';
+    
+            var csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrfmiddlewaretoken';
+            csrfInput.value = '{{ csrf_token }}';
+    
+            var productosInput = document.createElement('input');
+            productosInput.type = 'hidden';
+            productosInput.name = 'productos';
+            productosInput.value = JSON.stringify(productosCarrito);
+    
+            var totalInput = document.createElement('input');
+            totalInput.type = 'hidden';
+            totalInput.name = 'total';
+            totalInput.value = totalCompra;
+    
+            form.appendChild(csrfInput);
+            form.appendChild(productosInput);
+            form.appendChild(totalInput);
+    
+            document.body.appendChild(form);
+            form.submit();
+        } else {
+            alert('Compra cancelada.');
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+          var updateForms = document.querySelectorAll('.update-form');
+          updateForms.forEach(function(form) {
+              var cantidadInput = form.querySelector('input[name="cantidad"]');
+              var cantidadDisponible = parseInt(cantidadInput.getAttribute('max'));
+
+              cantidadInput.addEventListener('change', function() {
+                  var nuevaCantidad = parseInt(cantidadInput.value);
+
+                  if (nuevaCantidad === 0) {
+                      form.action = "{% url 'eliminar_del_carrito' %}";
+                  } else if (nuevaCantidad > cantidadDisponible) {
+                      cantidadInput.value = cantidadDisponible;
+                  }
+
+                  form.submit();
+              });
+          });
+      });
+    </script>
 {% endblock %}

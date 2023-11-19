@@ -1,0 +1,32 @@
+{% extends 'tiendaApp/base.html' %}
+{% block title %}Historial de compras{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="mb-5">    
+        <h1>Historial de compras</h1>
+    </div>
+    <table class="table" style="text-align: justify;">
+        <thead>
+            <tr>
+                <th>Id venta</th>
+                <th>Cliente</th>
+                <th>Fecha</th>
+                <th>Total</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for compra in compras %}
+            <tr>
+                <td>{{ compra.id }}</td>
+                <td>{{ compra.usuario }}</td>
+                <td>{{ compra.fecha }}</td>
+                <td>{{ compra.total }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
