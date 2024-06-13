@@ -84,6 +84,8 @@ DATABASES = {
         'NAME': 'tienda_db',
         'USER': 'admin',
         'PASSWORD': 'admin',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
     }
 }
 
